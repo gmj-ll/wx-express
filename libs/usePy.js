@@ -3,7 +3,7 @@ module.exports = {
   checkVoice (fileName, type, name) {
     return new Promise((resolve, reject) => {
       if (type == 1) {
-        exec(`cd python && python infer_recognition.py --audio_path ../wav/${fileName} --type ${type}`,function(error,stdout,stderr){
+        exec(`cd python && python3 infer_recognition.py --audio_path ../wav/${fileName} --type ${type}`,function(error,stdout,stderr){
           if(error) {
               console.info('stderr : '+stderr);
               reject()
