@@ -103,6 +103,10 @@ app.post('/', async (req, res) => {
         wechat.sendVoiceMedia(user_data, res)
       } else if (Content == '图片') {
         wechat.sendImageMedia(user_data, res)
+      } else if (Content == '图文') {
+        wechat.sendNewsMedia(user_data, res)
+      }  else if (Content == '动图') {
+        wechat.sendGifMedia(user_data, res)
       }
     }
     // else {

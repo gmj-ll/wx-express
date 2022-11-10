@@ -297,9 +297,7 @@ WeChat.prototype.sendVoiceMedia = function (user_data, res) {
 WeChat.prototype.sendImageMedia = function (user_data, res) {
   const { FromUserName, ToUserName } = user_data
   const item = global.mediaMap.image[Math.floor(Math.random() * global.mediaMap.image.length)]
-  let template
-  if (item.media_id) {
-    template = 
+  let template = 
       `
       <xml>
         <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
@@ -311,26 +309,6 @@ WeChat.prototype.sendImageMedia = function (user_data, res) {
         </Image>
       </xml>
       `
-  } else if (item.url) {
-    template = 
-      `
-      <xml>
-        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
-        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
-        <CreateTime>${Date.now()}</CreateTime>
-        <MsgType><![CDATA[news]]></MsgType>
-        <ArticleCount>1</ArticleCount>
-        <Articles>
-          <item>
-            <Title><![CDATA[摸摸头]]></Title>
-            <Description><![CDATA[不哭]]></Description>
-            <PicUrl><![CDATA[${item.url}]]></PicUrl>
-            <Url><![CDATA[${item.url}]]></Url>
-          </item>
-        </Articles>
-      </xml>
-      `
-  }
       res.send(template)
 }
 
@@ -349,6 +327,30 @@ WeChat.prototype.sendNewsMedia = function (user_data, res) {
           <item>
             <Title><![CDATA[${item.title}]]></Title>
             <Description><![CDATA[${item.digest}]]></Description>
+            <PicUrl><![CDATA[${item.url}]]></PicUrl>
+            <Url><![CDATA[${item.url}]]></Url>
+          </item>
+        </Articles>
+      </xml>
+      `
+      res.send(template)
+}
+
+WeChat.prototype.sendGifMedia = function (user_data, res) {
+  const { FromUserName, ToUserName } = user_data
+  const item = global.mediaMap.image[Math.floor(Math.random() * global.mediaMap.image.length)]
+  let template = 
+      `
+      <xml>
+        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+        <CreateTime>${Date.now()}</CreateTime>
+        <MsgType><![CDATA[news]]></MsgType>
+        <ArticleCount>1</ArticleCount>
+        <Articles>
+          <item>
+            <Title><![CDATA[摸摸头]]></Title>
+            <Description><![CDATA[不哭]]></Description>
             <PicUrl><![CDATA[${item.url}]]></PicUrl>
             <Url><![CDATA[${item.url}]]></Url>
           </item>
