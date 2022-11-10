@@ -9,11 +9,13 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.16.4",
     "express-static": "^1.2.6",
+    "ffmpeg-installer": "^1.0.2",
     "fluent-ffmpeg": "^2.1.2",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.2",

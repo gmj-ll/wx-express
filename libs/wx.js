@@ -108,11 +108,11 @@ WeChat.prototype.GetImageMediaList = function () {
     qs: {
       access_token: self.accessToken.access_token
     },
-    body: JSON.stringify({
+    body: {
       "type": "image",
       "offset": 0,
       "count": 20
-    }),
+    },
     json: true,
     method: 'POST',
     headers: {
@@ -141,11 +141,11 @@ WeChat.prototype.GetVideoList = function () {
     qs: {
       access_token: self.accessToken.access_token
     },
-    body: JSON.stringify({
+    body: {
       "type": "video",
       "offset": 0,
       "count": 20
-    }),
+    },
     json: true,
     method: 'POST',
     headers: {
@@ -174,11 +174,11 @@ WeChat.prototype.GetVoiceMediaList = function () {
     qs: {
       access_token: self.accessToken.access_token
     },
-    body: JSON.stringify({
+    body: {
       "type": "voice",
       "offset": 0,
       "count": 20
-    }),
+    },
     json: true,
     method: 'POST',
     headers: {
