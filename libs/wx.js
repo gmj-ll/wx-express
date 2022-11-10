@@ -149,8 +149,7 @@ WeChat.prototype.GetVideoList = function () {
     json: true,
     method: 'POST',
     headers: {
-      "content-type": "application/json",
-      'Accept': 'application/json'
+      "content-type": "application/json"
     }
   }
   return new Promise((resolve, reject) => {
