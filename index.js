@@ -96,6 +96,10 @@ app.post('/', async (req, res) => {
       if (Content == '视频') {
         wechat.sendVideoMedia(user_data, res)
         return
+      } else if (Content == '语音') {
+        wechat.sendVoiceMedia(user_data, res)
+      } else if (Content == '图片') {
+        wechat.sendImageMedia(user_data, res)
       }
     } else {
       let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]

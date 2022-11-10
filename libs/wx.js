@@ -241,6 +241,41 @@ WeChat.prototype.sendVideoMedia = function (user_data, res) {
       res.send(template)
 }
 
+WeChat.prototype.sendVoiceMedia = function (user_data, res) {
+  const { FromUserName, ToUserName } = user_data
+  const item = global.mediaMap.voice[Math.floor(Math.random() * global.mediaMap.voice.length)]
+  let template = 
+      `
+      <xml>
+        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+        <CreateTime>${Date.now()}</CreateTime>
+        <MsgType><![CDATA[voice]]></MsgType>
+        <Voice>
+          <MediaId><![CDATA[${item.media_id}]]></MediaId>
+        </Voice>
+      </xml>
+      `
+      res.send(template)
+}
+
+WeChat.prototype.sendImageMedia = function (user_data, res) {
+  const { FromUserName, ToUserName } = user_data
+  const item = global.mediaMap.image[Math.floor(Math.random() * global.mediaMap.image.length)]
+  let template = 
+      `
+      <xml>
+        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+        <CreateTime>${Date.now()}</CreateTime>
+        <MsgType><![CDATA[image]]></MsgType>
+        <Image>
+          <MediaId><![CDATA[${item.media_id}]]></MediaId>
+        </Image>
+      </xml>
+      `
+      res.send(template)
+}
 
 
 WeChat.prototype.subscribe = function (data, res) {
