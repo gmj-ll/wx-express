@@ -225,15 +225,17 @@ WeChat.prototype.postMedia = function () {
 WeChat.prototype.sendVideoMedia = function (user_data, res) {
   const { FromUserName, ToUserName } = user_data
   const item = global.mediaMap.video[Math.floor(Math.random() * global.mediaMap.video.length)]
-  console.log(item)
   let template = `
       <xml>
         <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
         <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
         <CreateTime>${Date.now()}</CreateTime>
         <MsgType><![CDATA[video]]></MsgType>
-        <MediaId><![CDATA[${item.media_id}]></MediaId>
-        <ThumbMediaId><![CDATA[${item.thumb_media_id}]]></ThumbMediaId>
+        <Video>
+          <MediaId><![CDATA[${item.media_id}]]></MediaId>
+          <Title><![CDATA[${item.name}]]></Title>
+          <Description><![CDATA[${item.description}]]></Description>
+        </Video>
       </xml>
       `
       res.send(template)
