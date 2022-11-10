@@ -1,7 +1,9 @@
 var request = require('request');
 var crypto = require('crypto');
 var fs = require('fs')
-var ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
 var { subscribeMsg, firstBindMsg, otherBindMsg } = require('../static')
 
 function WeChat(config) {
