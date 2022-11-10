@@ -127,6 +127,7 @@ WeChat.prototype.GetImageMediaList = function () {
         reject(error)
       }
       console.log('图片返回')
+      console.log(body.item)
       resolve(body.item)
     })
   })
