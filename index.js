@@ -47,6 +47,9 @@ wechat.GetAccessToken().then(success => {
   wechat.GetVoiceMediaList().then(res => {
     global.mediaMap.voice = res
   })
+  wechat.GetNewsMediaList().then(res => {
+    global.mediaMap.news = res
+  })
   console.log('初始化获取accessToken成功')
 }, failure => {
   console.log('初始化获取accessToken失败')
@@ -99,7 +102,7 @@ app.post('/', async (req, res) => {
       } else if (Content == '语音') {
         wechat.sendVoiceMedia(user_data, res)
       } else if (Content == '图片') {
-        wechat.sendImageMedia(user_data, res)
+        wechat.sendNewsMedia(user_data, res)
       }
     }
     // else {

@@ -200,6 +200,40 @@ WeChat.prototype.GetVoiceMediaList = function () {
 
 }
 
+WeChat.prototype.GetNewsMediaList = function () {
+  var self = this
+  let option = {
+    url: 'https://api.weixin.qq.com/cgi-bin/material/batchget_material',
+    qs: {
+      access_token: self.accessToken.access_token
+    },
+    body: {
+      "type": "news",
+      "offset": 0,
+      "count": 20
+    },
+    json: true,
+    method: 'POST',
+    headers: {
+      "content-type": "application/json",
+      'Accept': 'application/json'
+    }
+  }
+  return new Promise((resolve, reject) => {
+    request(option, function (error, response, body) {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('图文返回')
+      console.log(body.item)
+      resolve(body.item)
+    })
+  })
+  
+
+}
+
 WeChat.prototype.postMedia = function () {
   var self = this
   let option = {
@@ -272,6 +306,30 @@ WeChat.prototype.sendImageMedia = function (user_data, res) {
         <Image>
           <MediaId><![CDATA[${item.media_id}]]></MediaId>
         </Image>
+      </xml>
+      `
+      res.send(template)
+}
+
+WeChat.prototype.sendNewsMedia = function (user_data, res) {
+  const { FromUserName, ToUserName } = user_data
+  const item = global.mediaMap.news[Math.floor(Math.random() * global.mediaMap.news.length)]
+  let template = 
+      `
+      <xml>
+        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+        <CreateTime>${Date.now()}</CreateTime>
+        <MsgType><![CDATA[news]]></MsgType>
+        <ArticleCount>1</ArticleCount>
+        <Articles>
+          <item>
+            <Title><![CDATA[${item.title}]]></Title>
+            <Description><![CDATA[${item.digest}]]></Description>
+            <PicUrl><![CDATA[${item.url}]]></PicUrl>
+            <Url><![CDATA[${item.url}]]></Url>
+          </item>
+        </Articles>
       </xml>
       `
       res.send(template)
