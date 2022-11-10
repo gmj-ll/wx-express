@@ -160,6 +160,7 @@ WeChat.prototype.GetVideoList = function () {
         reject(error)
       }
       console.log('视频返回')
+      console.log(body)
       resolve(body.item)
     })
   })
@@ -224,6 +225,7 @@ WeChat.prototype.postMedia = function () {
 
 WeChat.prototype.sendVideoMedia = function (user_data, res) {
   const { FromUserName, ToUserName } = user_data
+  console.log(global.mediaMap)
   const item = global.mediaMap.video[Math.floor(Math.random() * global.mediaMap.video.length)]
   let template = `
       <xml>
