@@ -101,16 +101,17 @@ WeChat.prototype.GetMedia = function (id) {
 
 }
 
-WeChat.prototype.GetVideoMedia = function (id) {
-  console.log(id)
+WeChat.prototype.GetImageMediaList = function () {
   var self = this
   let option = {
-    url: 'https://api.weixin.qq.com/cgi-bin/material/get_material',
+    url: 'https://api.weixin.qq.com/cgi-bin/material/batchget_material',
     qs: {
       access_token: self.accessToken.access_token
     },
     body: JSON.stringify({
-      "media_id": id
+      "type": "image",
+      "offset": 0,
+      "count": 20
     }),
     json: true,
     method: 'POST',
@@ -125,9 +126,74 @@ WeChat.prototype.GetVideoMedia = function (id) {
         console.log(error)
         reject(error)
       }
-      console.log('媒体返回')
-      console.log(body);
-      resolve(body)
+      console.log('图片返回')
+      resolve(body.item)
+    })
+  })
+  
+
+}
+
+WeChat.prototype.GetVideoList = function () {
+  var self = this
+  let option = {
+    url: 'https://api.weixin.qq.com/cgi-bin/material/batchget_material',
+    qs: {
+      access_token: self.accessToken.access_token
+    },
+    body: JSON.stringify({
+      "type": "video",
+      "offset": 0,
+      "count": 20
+    }),
+    json: true,
+    method: 'POST',
+    headers: {
+      "content-type": "application/json",
+      'Accept': 'application/json'
+    }
+  }
+  return new Promise((resolve, reject) => {
+    request(option, function (error, response, body) {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('视频返回')
+      resolve(body.item)
+    })
+  })
+  
+
+}
+
+WeChat.prototype.GetVoiceMediaList = function () {
+  var self = this
+  let option = {
+    url: 'https://api.weixin.qq.com/cgi-bin/material/batchget_material',
+    qs: {
+      access_token: self.accessToken.access_token
+    },
+    body: JSON.stringify({
+      "type": "voice",
+      "offset": 0,
+      "count": 20
+    }),
+    json: true,
+    method: 'POST',
+    headers: {
+      "content-type": "application/json",
+      'Accept': 'application/json'
+    }
+  }
+  return new Promise((resolve, reject) => {
+    request(option, function (error, response, body) {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('语音返回')
+      resolve(body.item)
     })
   })
   
@@ -155,6 +221,24 @@ WeChat.prototype.postMedia = function () {
     console.log('返回: ' + body);
   })
 }
+
+WeChat.prototype.sendVideoMedia = function (user_data, res) {
+  const { FromUserName, ToUserName } = user_data
+  const item = global.mediaMap.video[Math.floor(Math.random() * global.mediaMap.video.length)]
+  let template = `
+      <xml>
+        <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+        <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+        <CreateTime>${Date.now()}</CreateTime>
+        <MsgType><![CDATA[video]]></MsgType>
+        <MediaId><![CDATA[${item.media_id}]></MediaId>
+        <ThumbMediaId><![CDATA[${item.thumb_media_id}]]></ThumbMediaId>
+      </xml>
+      `
+      res.send(template)
+}
+
+
 
 WeChat.prototype.subscribe = function (data, res) {
   const { FromUserName, ToUserName } = data
