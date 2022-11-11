@@ -336,9 +336,29 @@ WeChat.prototype.sendNewsMedia = function (user_data, res) {
       res.send(template)
 }
 
-WeChat.prototype.sendGifMedia = function (user_data, res) {
+WeChat.prototype.sendOthersMedia = function (user_data, res, type) {
   const { FromUserName, ToUserName } = user_data
-  const item = global.mediaMap.image[Math.floor(Math.random() * global.mediaMap.image.length)]
+  let item = {}
+  if (type == 'gif') {
+    item = global.mediaMap.image[Math.floor(Math.random() * global.mediaMap.image.length)]
+    item.title = '摸摸头'
+    item.description = '不哭'
+    item.picUrl = item.url
+    item.url = 'https://mp.weixin.qq.com/s?__biz=MzkwNTQyMTg2OA==&mid=2247483663&idx=1&sn=d110c79e6cbb6b62ac1c4cfa1a8be538&chksm=c0f6b44cf7813d5a2b49a27e64b0294699eabd4bc539cf0b568b40297cea2d89aee1d41f2f65#rd'
+  }
+  if (type == 'flower') {
+    item.title = '💐'
+    item.description = '送你一朵花束般的'
+    item.picUrl = './flower.jpeg'
+    item.url = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/flower'
+  }
+  if (type == 'bear') {
+    item.title = '🐻'
+    item.description = '可爱小熊'
+    item.picUrl = './bear.jpeg'
+    item.url = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/bear'
+  }
+  
   let template = 
       `
       <xml>
@@ -349,10 +369,10 @@ WeChat.prototype.sendGifMedia = function (user_data, res) {
         <ArticleCount>1</ArticleCount>
         <Articles>
           <item>
-            <Title><![CDATA[摸摸头]]></Title>
-            <Description><![CDATA[不哭]]></Description>
-            <PicUrl><![CDATA[${item.url}]]></PicUrl>
-            <Url><![CDATA[${item.url}]]></Url>
+            <Title><![CDATA[${item.title}]]></Title>
+            <Description><![CDATA[${item.description}]]></Description>
+            <PicUrl><![CDATA[${item.picUrl}]]></PicUrl>
+            <Url><![CDATA[${url}]]></Url>
           </item>
         </Articles>
       </xml>

@@ -101,12 +101,20 @@ app.post('/', async (req, res) => {
         return
       } else if (Content == '语音') {
         wechat.sendVoiceMedia(user_data, res)
-      } else if (Content == '图片') {
-        wechat.sendImageMedia(user_data, res)
-      } else if (Content == '图文') {
-        wechat.sendNewsMedia(user_data, res)
-      }  else if (Content == '动图') {
-        wechat.sendGifMedia(user_data, res)
+      }
+      // else if (Content == '图片') {
+      //   wechat.sendImageMedia(user_data, res)
+      // }
+      // else if (Content == '图文') {
+      //   wechat.sendNewsMedia(user_data, res)
+      // }
+      else if (Content == '动图') {
+        wechat.sendOthersMedia(user_data, res, 'gif')
+      }
+      else if (Content == '花') {
+        wechat.sendOthersMedia(user_data, res, 'flower')
+      } else if (Content == '小熊') {
+        wechat.sendOthersMedia(user_data, res, 'bear')
       }
     }
     // else {
