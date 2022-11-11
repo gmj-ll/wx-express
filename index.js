@@ -1,14 +1,58 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { getUserDataAsync, parseXmlData, formatMsg } = require("./libs/utils")
+const {
+  getUserDataAsync,
+  parseXmlData,
+  formatMsg
+} = require("./libs/utils")
 
 var fs = require('fs')
 
-var { WeChat } = require('./libs/wx');
+var {
+  WeChat
+} = require('./libs/wx');
 
-var { errorMsgs, successMsgs, medias } = require('./static')
 
-var { check, bind } = require('./libs/check')
+const tencentcloud = require("tencentcloud-sdk-nodejs")
+
+// 导入对应产品模块的client models。
+const NlpClient = tencentcloud.nlp.v20190408.Client
+
+// 实例化要请求产品(以cvm为例)的client对象
+const client = new NlpClient({
+  // 腾讯云认证信息
+  credential: {
+    secretId: "AKIDxITaYRG4hBSfibfmntvCTenw6fBlMyX2",
+    secretKey: "b8X90064ZF8vZ6UhTksqeKNJ1ZuGZjHb",
+  },
+  // 产品地域
+  region: "ap-guangzhou",
+  // 可选配置实例
+  profile: {
+    signMethod: "TC3-HMAC-SHA256", // 签名方法
+    httpProfile: {
+      endpoint: "nlp.tencentcloudapi.com"
+      // reqMethod: "POST", // 请求方法
+      // reqTimeout: 30, // 请求超时时间，默认60s
+      // proxy: "http://127.0.0.1:8899" // http请求代理
+    },
+  },
+})
+// 通过client对象调用想要访问的接口（Action），需要传入请求对象（Params）以及响应回调函数
+// 即：client.Action(Params).then(res => console.log(res), err => console.error(err))
+// 如：查询云服务器可用区列表
+
+
+var {
+  errorMsgs,
+  successMsgs,
+  medias
+} = require('./static')
+
+var {
+  check,
+  bind
+} = require('./libs/check')
 
 var wechat = new WeChat({
   App_Id: 'wx117698d319ab8832',
@@ -62,11 +106,15 @@ const app = express()
 
 app.use(bodyParser.raw())
 app.use(bodyParser.json({}))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
 
 app.get('/', (req, res) => {
   if (req.query.echostr) {
-    const { echostr } = req.query
+    const {
+      echostr
+    } = req.query
     res.send(echostr)
   } else {
     res.send('get')
@@ -78,23 +126,26 @@ app.post('/', async (req, res) => {
   const xml_data = await getUserDataAsync(req)
   let user_data = await parseXmlData(xml_data)
   user_data = formatMsg(user_data)
-  const { MsgType, Content, FromUserName, ToUserName, Event } = user_data
+  const {
+    MsgType,
+    Content,
+    FromUserName,
+    ToUserName,
+    Event
+  } = user_data
 
   if (Event == 'subscribe') {
     wechat.subscribe(user_data, res)
-  }
-  else if (Event == 'unsubscribe') {
+  } else if (Event == 'unsubscribe') {
     global.openIdStatus[FromUserName] = false
-  }
-  else {
+  } else {
     if (MsgType == 'voice') {
       if (global.isFindMaster) { // check
         check(user_data, wechat, res)
       } else { // bind
         bind(user_data, wechat, res)
       }
-    }
-    else if (global.openIdStatus[FromUserName]) {
+    } else if (global.openIdStatus[FromUserName]) {
       if (Content == '视频') {
         wechat.sendVideoMedia(user_data, res)
         return
@@ -109,23 +160,64 @@ app.post('/', async (req, res) => {
       // }
       else if (Content == '动图') {
         wechat.sendOthersMedia(user_data, res, 'gif')
-      }
-      else if (Content == '花') {
+      } else if (Content == '花') {
         wechat.sendOthersMedia(user_data, res, 'flower')
       } else if (Content == '小熊') {
         wechat.sendOthersMedia(user_data, res, 'bear')
+      } else {
+        client.ChatBot({
+          "Query": Content
+        }).then(
+          (data) => {
+            let replyMessage = `<xml>
+                  <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+                  <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+                  <CreateTime>${Date.now()}</CreateTime>
+                  <MsgType><![CDATA[text]]></MsgType>
+                  <Content><![CDATA[${data.Reply}]]></Content>
+                  </xml>`
+            res.send(replyMessage)
+          },
+          (err) => {
+            let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]
+            let replyMessage = `<xml>
+                  <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+                  <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+                  <CreateTime>${Date.now()}</CreateTime>
+                  <MsgType><![CDATA[text]]></MsgType>
+                  <Content><![CDATA[${errorMsg}]]></Content>
+                  </xml>`
+            res.send(replyMessage)
+          }
+        )
       }
-    }
-    else {
-      let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]
-      let replyMessage = `<xml>
+    } else {
+      client.ChatBot({
+        "Query": Content
+      }).then(
+        (data) => {
+          let replyMessage = `<xml>
+                <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+                <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+                <CreateTime>${Date.now()}</CreateTime>
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[${data.Reply}]]></Content>
+                </xml>`
+          res.send(replyMessage)
+        },
+        (err) => {
+          let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]
+          let replyMessage = `<xml>
                 <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
                 <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
                 <CreateTime>${Date.now()}</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA[${errorMsg}]]></Content>
                 </xml>`
-      res.send(replyMessage)
+          res.send(replyMessage)
+        }
+      )
+
     }
   }
 

@@ -398,5 +398,43 @@ WeChat.prototype.subscribe = function (data, res) {
   </xml>`)
 }
 
+WeChat.prototype.GetNewsMediaList = function () {
+  var self = this
+  let option = {
+    url: 'https://nlp.tencentcloudapi.com',
+    qs: {
+      Action: 'ChatBot',
+      Version: '2019-04-08',
+      Region: 'ap-guangzhou',
+      
+      access_token: self.accessToken.access_token
+    },
+    body: {
+      "type": "news",
+      "offset": 0,
+      "count": 20
+    },
+    json: true,
+    method: 'POST',
+    headers: {
+      "content-type": "application/json",
+      'Accept': 'application/json'
+    }
+  }
+  return new Promise((resolve, reject) => {
+    request(option, function (error, response, body) {
+      if (error) {
+        console.log(error)
+        reject(error)
+      }
+      console.log('图文返回')
+      console.log(body.item)
+      resolve(body.item)
+    })
+  })
+  
+
+}
+
 
 module.exports.WeChat = WeChat;
