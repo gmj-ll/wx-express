@@ -372,7 +372,7 @@ WeChat.prototype.sendOthersMedia = function (user_data, res, type) {
             <Title><![CDATA[${item.title}]]></Title>
             <Description><![CDATA[${item.description}]]></Description>
             <PicUrl><![CDATA[${item.picUrl}]]></PicUrl>
-            <Url><![CDATA[${url}]]></Url>
+            <Url><![CDATA[${item.url}]]></Url>
           </item>
         </Articles>
       </xml>
