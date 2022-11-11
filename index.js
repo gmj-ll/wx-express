@@ -317,7 +317,34 @@ app.post('/', async (req, res) => {
 //     res.send('success')
 //   }
 // })
+app.use(async (err,req, res, next) => {
 
+  const xml_data = await getUserDataAsync(req)
+  let user_data = await parseXmlData(xml_data)
+  user_data = formatMsg(user_data)
+  const {
+    FromUserName,
+    ToUserName,
+  } = user_data
+  const err_log = `
+      +---------------+-------------------------+
+      错误名称：${err.name},\n
+      错误信息：${err.message},\n
+      错误时间：${new Date()},\n
+      错误堆栈：${err.stack},\n
+      +---------------+-------------------------+
+  `
+  fs.appendFile(path.join(__dirname,"error.log"),err_log,()=>{
+    let replyMessage = `<xml>
+          <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+          <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+          <CreateTime>${Date.now()}</CreateTime>
+          <MsgType><![CDATA[text]]></MsgType>
+          <Content><![CDATA[我故障了，请摇人来]]></Content>
+          </xml>`
+    res.send(replyMessage)
+  });
+})
 app.listen(PORT, function () {
   console.log(`运行成功，端口：${PORT}`)
 })
