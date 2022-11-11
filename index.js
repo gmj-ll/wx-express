@@ -94,8 +94,7 @@ app.post('/', async (req, res) => {
         bind(user_data, wechat, res)
       }
     }
-    else if (Content) {
-    // else if (global.openIdStatus[FromUserName]) {
+    else if (global.openIdStatus[FromUserName]) {
       if (Content == '视频') {
         wechat.sendVideoMedia(user_data, res)
         return
@@ -117,17 +116,17 @@ app.post('/', async (req, res) => {
         wechat.sendOthersMedia(user_data, res, 'bear')
       }
     }
-    // else {
-    //   let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]
-    //   let replyMessage = `<xml>
-    //             <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
-    //             <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
-    //             <CreateTime>${Date.now()}</CreateTime>
-    //             <MsgType><![CDATA[text]]></MsgType>
-    //             <Content><![CDATA[${errorMsg}]]></Content>
-    //             </xml>`
-    //   res.send(replyMessage)
-    // }
+    else {
+      let errorMsg = errorMsgs[Math.floor((Math.random() * errorMsgs.length))]
+      let replyMessage = `<xml>
+                <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+                <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+                <CreateTime>${Date.now()}</CreateTime>
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[${errorMsg}]]></Content>
+                </xml>`
+      res.send(replyMessage)
+    }
   }
 
 })

@@ -349,13 +349,13 @@ WeChat.prototype.sendOthersMedia = function (user_data, res, type) {
   if (type == 'flower') {
     item.title = '💐'
     item.description = '送你一朵花束般的'
-    item.picUrl = './flower.jpeg'
+    item.picUrl = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/flower.jpeg'
     item.url = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/flower'
   }
   if (type == 'bear') {
     item.title = '🐻'
     item.description = '可爱小熊'
-    item.picUrl = './bear.jpeg'
+    item.picUrl = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/bear.jpeg'
     item.url = 'cloudbase-baas-7gfw5zoncc716703-1258613356.tcloudbaseapp.com/bear'
   }
   
